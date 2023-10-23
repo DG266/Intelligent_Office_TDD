@@ -24,32 +24,32 @@ class IntelligentOfficeTest(unittest.TestCase):
         is_occupied = self.int_off.check_occupancy()
         self.assertEqual(True, is_occupied)
 
-    @patch.object(RTC, 'get_current_day')
-    @patch.object(RTC, 'get_current_time_string')
+    @patch.object(RTC, "get_current_day")
+    @patch.object(RTC, "get_current_time_string")
     def test_open_blinds_on_working_day(self, mock_time, mock_day):
         mock_time.return_value = "08:00:00"
         mock_day.return_value = "MONDAY"
         self.int_off.manage_blinds_based_on_time()
         self.assertEqual(True, self.int_off.blinds_open)
 
-    @patch.object(RTC, 'get_current_day')
-    @patch.object(RTC, 'get_current_time_string')
+    @patch.object(RTC, "get_current_day")
+    @patch.object(RTC, "get_current_time_string")
     def test_close_blinds_on_working_day(self, mock_time, mock_day):
         mock_time.return_value = "20:00:00"
         mock_day.return_value = "WEDNESDAY"
         self.int_off.manage_blinds_based_on_time()
         self.assertEqual(False, self.int_off.blinds_open)
 
-    @patch.object(RTC, 'get_current_day')
-    @patch.object(RTC, 'get_current_time_string')
+    @patch.object(RTC, "get_current_day")
+    @patch.object(RTC, "get_current_time_string")
     def test_open_blinds_on_non_working_day(self, mock_time, mock_day):
         mock_time.return_value = "08:00:00"
         mock_day.return_value = "SUNDAY"
         self.int_off.manage_blinds_based_on_time()
         self.assertEqual(False, self.int_off.blinds_open)
 
-    @patch.object(RTC, 'get_current_day')
-    @patch.object(RTC, 'get_current_time_string')
+    @patch.object(RTC, "get_current_day")
+    @patch.object(RTC, "get_current_time_string")
     def test_close_blinds_on_non_working_day(self, mock_time, mock_day):
         mock_time.return_value = "20:00:00"
         mock_day.return_value = "SATURDAY"
