@@ -45,8 +45,11 @@ class IntelligentOffice:
         :param pin: The data pin of the sensor that is being checked (e.g., INFRARED_PIN1).
         :return: True if the infrared sensor detects something, False otherwise.
         """
-        pass
-
+        result = GPIO.input(self.INFRARED_PIN)
+        if result == 0:
+            return True
+        else:
+            return False
 
     def manage_blinds_based_on_time(self) -> None:
         """
