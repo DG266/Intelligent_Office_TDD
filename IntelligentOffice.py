@@ -18,6 +18,9 @@ class IntelligentOffice:
     LUX_MIN = 500
     LUX_MAX = 550
 
+    DC_OPEN = (180 / 18) + 2
+    DC_CLOSED = (0 / 18) + 2
+
     def __init__(self):
         """
         Constructor
@@ -57,8 +60,19 @@ class IntelligentOffice:
         The system fully opens the blinds at 8:00 and fully closes them at 20:00
         each day except for Saturday and Sunday.
         """
-        pass
-        
+        current_time = time.strptime(RTC.get_current_time_string(), "%H:%M:%S")
+        hour = current_time.tm_hour
+        minutes = current_time.tm_min
+        sec = current_time.tm_sec
+        day = RTC.get_current_day()
+
+        if day in ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"]:
+            if hour == 8 and minutes == 0 and sec == 0:
+                self.change_servo_angle(self.DC_OPEN)
+                self.blinds_open = True
+            elif hour == 20 and minutes == 0 and sec == 0:
+                self.change_servo_angle(self.DC_CLOSED)
+                self.blinds_open = False
 
     def manage_light_level(self) -> None:
         """
