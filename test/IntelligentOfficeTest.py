@@ -56,6 +56,13 @@ class IntelligentOfficeTest(unittest.TestCase):
         self.int_off.manage_blinds_based_on_time()
         self.assertEqual(False, self.int_off.blinds_open)
 
+    @patch.object(RTC, "get_current_day")
+    @patch.object(RTC, "get_current_time_string")
+    def test_manage_blinds_based_on_time_with_wrong_day(self, mock_time, mock_day):
+        mock_time.return_value = "8:00:00"
+        mock_day.return_value = "June"
+        self.assertRaises(IntelligentOfficeError, self.int_off.manage_blinds_based_on_time)
+
     @patch.object(GPIO, "input")
     def test_manage_light_level_with_450_lux_and_office_worker(self, mock_input):
         # 0 -> someone is in the office

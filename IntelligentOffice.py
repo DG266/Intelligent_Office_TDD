@@ -73,6 +73,10 @@ class IntelligentOffice:
             elif hour == 20 and minutes == 0 and sec == 0:
                 self.change_servo_angle(self.DC_CLOSED)
                 self.blinds_open = False
+        elif day in ["SATURDAY", "SUNDAY"]:
+            pass
+        else:
+            raise IntelligentOfficeError
 
     def manage_light_level(self) -> None:
         """
