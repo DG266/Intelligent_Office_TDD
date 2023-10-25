@@ -55,3 +55,31 @@ class IntelligentOfficeTest(unittest.TestCase):
         mock_day.return_value = "SATURDAY"
         self.int_off.manage_blinds_based_on_time()
         self.assertEqual(False, self.int_off.blinds_open)
+
+    @patch.object(GPIO, "input")
+    def test_light_level_lower_than_500(self, mock_input):
+        mock_input.return_value = 450
+        self.int_off.manage_light_level()
+        self.assertEqual(True, self.int_off.light_on)
+
+    @patch.object(GPIO, "input")
+    def test_light_level_higher_than_550(self, mock_input):
+        mock_input.return_value = 600
+        self.int_off.manage_light_level()
+        self.assertEqual(False, self.int_off.light_on)
+
+    @patch.object(GPIO, "input")
+    def test_light_level_from_600_to_525(self, mock_input):
+        mock_input.return_value = 600
+        self.int_off.manage_light_level()
+        mock_input.return_value = 525
+        self.int_off.manage_light_level()
+        self.assertEqual(False, self.int_off.light_on)
+
+    @patch.object(GPIO, "input")
+    def test_light_level_from_450_to_525(self, mock_input):
+        mock_input.return_value = 450
+        self.int_off.manage_light_level()
+        mock_input.return_value = 525
+        self.int_off.manage_light_level()
+        self.assertEqual(True, self.int_off.light_on)
