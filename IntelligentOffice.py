@@ -76,7 +76,7 @@ class IntelligentOffice:
 
     def manage_light_level(self) -> None:
         """
-        Tries to maintain the actual light level inside the office, measure by the photoresitor,
+        Tries to maintain the actual light level inside the office, measure by the photoresistor,
         between LUX_MIN and LUX_MAX.
         If the actual light level is lower than LUX_MIN the system turns on the smart light bulb.
         On the other hand, if the actual light level is greater than LUX_MAX, the system turns off the smart light bulb.
@@ -85,10 +85,13 @@ class IntelligentOffice:
         stops regulating the light level in the office and then turns off the smart light bulb.
         When the worker goes back into the office, the system resumes regulating the light level
         """
-        result = GPIO.input(self.PHOTO_PIN)
-        if result < self.LUX_MIN:
-            self.turn_on_light()
-        elif result > self.LUX_MAX:
+        if self.check_occupancy():
+            light_level = GPIO.input(self.PHOTO_PIN)
+            if light_level < self.LUX_MIN:
+                self.turn_on_light()
+            elif light_level > self.LUX_MAX:
+                self.turn_off_light()
+        else:
             self.turn_off_light()
 
     def turn_on_light(self) -> None:
