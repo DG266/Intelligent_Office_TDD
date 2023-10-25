@@ -115,3 +115,29 @@ class IntelligentOfficeTest(unittest.TestCase):
         self.int_off.manage_light_level()
         self.int_off.manage_light_level()
         self.assertEqual(False, self.int_off.light_on)
+
+    @patch.object(GPIO, "input")
+    def test_monitor_air_quality_with_800_ppm(self, mock_input):
+        mock_input.return_value = 800
+        self.int_off.monitor_air_quality()
+        self.assertEqual(True, self.int_off.fan_switch_on)
+
+    @patch.object(GPIO, "input")
+    def test_monitor_air_quality_with_ppm_lower_than_500(self, mock_input):
+        mock_input.return_value = 400
+        self.int_off.monitor_air_quality()
+        self.assertEqual(False, self.int_off.fan_switch_on)
+
+    @patch.object(GPIO, "input")
+    def test_monitor_air_quality_with_ppm_400_to_600(self, mock_input):
+        mock_input.side_effect = [400, 600]
+        self.int_off.monitor_air_quality()
+        self.int_off.monitor_air_quality()
+        self.assertEqual(False, self.int_off.fan_switch_on)
+
+    @patch.object(GPIO, "input")
+    def test_monitor_air_quality_with_ppm_800_to_600(self, mock_input):
+        mock_input.side_effect = [800, 600]
+        self.int_off.monitor_air_quality()
+        self.int_off.monitor_air_quality()
+        self.assertEqual(True, self.int_off.fan_switch_on)

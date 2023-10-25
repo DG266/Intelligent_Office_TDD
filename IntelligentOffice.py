@@ -108,7 +108,13 @@ class IntelligentOffice:
         If the amount of detected CO2 is greater than or equal to 800 PPM, the system turns on the
         switch of the exhaust fan until the amount of CO2 is lower than 500 PPM.
         """
-        pass
+        c02_level = GPIO.input(self.CO2_PIN)
+        if c02_level >= 800:
+            GPIO.output(self.FAN_PIN, GPIO.HIGH)
+            self.fan_switch_on = True
+        elif c02_level < 500:
+            GPIO.output(self.FAN_PIN, GPIO.LOW)
+            self.fan_switch_on = False
 
     def change_servo_angle(self, duty_cycle: float) -> None:
         """
