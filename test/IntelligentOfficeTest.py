@@ -42,6 +42,38 @@ class IntelligentOfficeTest(unittest.TestCase):
 
     @patch.object(RTC, "get_current_day")
     @patch.object(RTC, "get_current_time_string")
+    def test_manage_blinds_based_on_time_on_working_day_at_18(self, mock_time, mock_day):
+        mock_time.return_value = "18:00:00"
+        mock_day.return_value = "FRIDAY"
+        self.int_off.manage_blinds_based_on_time()
+        self.assertEqual(True, self.int_off.blinds_open)
+
+    @patch.object(RTC, "get_current_day")
+    @patch.object(RTC, "get_current_time_string")
+    def test_manage_blinds_based_on_time_on_working_day_at_00(self, mock_time, mock_day):
+        mock_time.return_value = "00:00:00"
+        mock_day.return_value = "TUESDAY"
+        self.int_off.manage_blinds_based_on_time()
+        self.assertEqual(False, self.int_off.blinds_open)
+
+    @patch.object(RTC, "get_current_day")
+    @patch.object(RTC, "get_current_time_string")
+    def test_manage_blinds_based_on_time_on_working_day_at_07_59_59(self, mock_time, mock_day):
+        mock_time.return_value = "07:59:59"
+        mock_day.return_value = "THURSDAY"
+        self.int_off.manage_blinds_based_on_time()
+        self.assertEqual(False, self.int_off.blinds_open)
+
+    @patch.object(RTC, "get_current_day")
+    @patch.object(RTC, "get_current_time_string")
+    def test_manage_blinds_based_on_time_on_working_day_at_19_59_59(self, mock_time, mock_day):
+        mock_time.return_value = "19:59:59"
+        mock_day.return_value = "MONDAY"
+        self.int_off.manage_blinds_based_on_time()
+        self.assertEqual(True, self.int_off.blinds_open)
+
+    @patch.object(RTC, "get_current_day")
+    @patch.object(RTC, "get_current_time_string")
     def test_manage_blinds_based_on_time_on_non_working_day_at_8(self, mock_time, mock_day):
         mock_time.return_value = "08:00:00"
         mock_day.return_value = "SUNDAY"
@@ -52,6 +84,14 @@ class IntelligentOfficeTest(unittest.TestCase):
     @patch.object(RTC, "get_current_time_string")
     def test_manage_blinds_based_on_time_on_non_working_day_at_20(self, mock_time, mock_day):
         mock_time.return_value = "20:00:00"
+        mock_day.return_value = "SATURDAY"
+        self.int_off.manage_blinds_based_on_time()
+        self.assertEqual(False, self.int_off.blinds_open)
+
+    @patch.object(RTC, "get_current_day")
+    @patch.object(RTC, "get_current_time_string")
+    def test_manage_blinds_based_on_time_on_non_working_day_at_00(self, mock_time, mock_day):
+        mock_time.return_value = "00:00:00"
         mock_day.return_value = "SATURDAY"
         self.int_off.manage_blinds_based_on_time()
         self.assertEqual(False, self.int_off.blinds_open)

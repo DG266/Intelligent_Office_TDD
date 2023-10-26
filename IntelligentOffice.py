@@ -62,21 +62,27 @@ class IntelligentOffice:
         """
         current_time = time.strptime(RTC.get_current_time_string(), "%H:%M:%S")
         hour = current_time.tm_hour
-        minutes = current_time.tm_min
-        sec = current_time.tm_sec
         day = RTC.get_current_day()
 
         if day in ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"]:
-            if hour == 8 and minutes == 0 and sec == 0:
-                self.change_servo_angle(self.DC_OPEN)
-                self.blinds_open = True
-            elif hour == 20 and minutes == 0 and sec == 0:
-                self.change_servo_angle(self.DC_CLOSED)
-                self.blinds_open = False
+            if 8 <= hour < 20:
+                self.open_blinds()
+            else:
+                self.close_blinds()
         elif day in ["SATURDAY", "SUNDAY"]:
             pass
         else:
             raise IntelligentOfficeError
+
+    def open_blinds(self) -> None:
+        if not self.blinds_open:
+            self.change_servo_angle(self.DC_OPEN)
+            self.blinds_open = True
+
+    def close_blinds(self) -> None:
+        if self.blinds_open:
+            self.change_servo_angle(self.DC_CLOSED)
+            self.blinds_open = False
 
     def manage_light_level(self) -> None:
         """
